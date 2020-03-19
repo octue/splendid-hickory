@@ -8,7 +8,8 @@ export default class DocsMenu extends React.Component {
     render() {
         let site = _.get(this.props, 'site');
         let page = _.get(this.props, 'page');
-        let root_page_path = _.get(site, 'data.doc_sections.root_folder') + 'index.md';
+        let root_folder = _.get(site, 'data.doc_sections.root_folder')
+        let root_page_path = root_folder === '/' ? 'index.md' : 'docs.md';
         let root_page = getPage(this.props.pageContext.pages, root_page_path);
         return (
             <nav id="docs-nav" className="docs-nav">
@@ -20,10 +21,10 @@ export default class DocsMenu extends React.Component {
                       <Link to={safePrefix(_.get(root_page, 'url'))}>{_.get(root_page, 'frontmatter.title')}</Link>
                     </li>
                     {_.map(_.get(site, 'data.doc_sections.sections'), (section, section_idx) => {
-                        let section_folder = _.get(site, 'data.doc_sections.root_folder') + section;
-                        let section_page_path = section_folder + '/index.md';
+                        let section_folder = root_folder + section;
+                        let section_page_path = root_folder + section + '.md';
                         let section_page = getPage(this.props.pageContext.pages, section_page_path);
-                        let child_pages = _.orderBy(_.filter(getPages(this.props.pageContext.pages, section_folder), item => _.get(item, 'base') != 'index.md'), 'frontmatter.weight');
+                        let child_pages = _.orderBy(_.filter(getPages(this.props.pageContext.pages, section_folder), item => _.get(item, 'base') !== 'index.md'), 'frontmatter.weight');
                         let child_count = _.size(child_pages);
                         let has_children = (child_count > 0) ? true : false;
                         let is_current_page = (_.get(page, 'relativePath') === _.get(section_page, 'relativePath')) ? true : false;
