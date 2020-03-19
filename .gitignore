@@ -70,4 +70,4 @@ yarn-error.log
 .idea
 src/data/*
 src/pages/*
-site-metadata
+site-metadata.json
